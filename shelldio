@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-# bash_radio_gr - ακούστε online ραδιόφωνο από το τερματικό
+# Shelldio - ακούστε online ραδιόφωνο από το τερματικό
 # Copyright (c)2018 Vasilis Niakas and Contributors
 #
 # This program is free software; you can redistribute it and/or modify
@@ -36,9 +36,9 @@ tput civis      -- invisible  # Εξαφάνιση cursor
 echo -ne "| Η ώρα είναι "$(date +"%T")"\n| Ακούτε "$stathmos_name"\n| Πατήστε Q/q για έξοδο ή R/r για επιστροφή στη λίστα σταθμών"
 }
 echo "---------------------------------------------------------"
-echo "bash_radio_gr - ακούστε online ραδιόφωνο από το τερματικό"
+echo "Shelldio - ακούστε online ραδιόφωνο από το τερματικό"
 echo "---------------------------------------------------------"
-echo "https://github.com/billniakas/bash_radio_gr"
+echo "https://github.com/CerebruxCode/Shelldio"
 
 while true 
 do
