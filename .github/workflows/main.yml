@@ -2,6 +2,7 @@ name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
+# https://github.com/azohra/shell-linter and https://github.com/marketplace/actions/shell-linter
 on:
   push:
   pull_request:
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
       - name: Run Shellcheck
         uses: azohra/shell-linter@latest
         with:
