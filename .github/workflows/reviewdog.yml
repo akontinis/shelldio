@@ -19,7 +19,8 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-check # Change reporter.
-          pattern: "*.sh" # Optional.
+          path: "shelldio"
+          #pattern: "*.sh" # Optional.
           exclude: "./.git/*" # Optional.
           shellcheck_flags: --external-sources
           #level: info
@@ -36,6 +37,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review 
-          pattern: "*.sh" # Optional.
+          path: "shelldio"
+          #pattern: "*.sh" # Optional.
           exclude: "./.git/*" # Optional.
           shellcheck_flags: --external-sources
