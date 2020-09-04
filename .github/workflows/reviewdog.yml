@@ -22,7 +22,7 @@ jobs:
           #path: "shelldio"
           #pattern: "*.sh" # Optional.
           exclude: "./.git/*" # Optional.
-          #shellcheck_flags: --external-sources
+          shellcheck_flags: --external-sources
           #level: info
           #shellcheck_flags: --severity=style  
   shellcheck_pr:
@@ -40,4 +40,4 @@ jobs:
           #path: "shelldio"
           #pattern: "*.sh" # Optional.
           exclude: "./.git/*" # Optional.
-          #shellcheck_flags: --external-sources
+          shellcheck_flags: --external-sources
