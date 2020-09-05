@@ -18,7 +18,7 @@ trap ' [ $terms = 1 ] || { terms=1; kill -TERM -$$; };  exit' EXIT INT HUP TERM 
 
 if [ "$#" -eq "0" ]		    #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
 	then
-	stations="my_stations.txt"
+	stations="$HOME/.shelldio/my_stations.txt"
 	else
 	stations=$1
 fi
