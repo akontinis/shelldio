@@ -42,9 +42,8 @@
 
 ```
 git clone https://github.com/CerebruxCode/shelldio ~/shelldio
-cd ~/shelldio
-cp -r .shelldio/ ~/.shelldio
-sudo ln -s $PWD/shelldio.sh /usr/bin/shelldio
+cp -r ~/shelldio/.shelldio/ ~/.shelldio
+sudo ln -s ~/shelldio/shelldio.sh /usr/bin/shelldio
 ```
 
 ## Οδηγίες Αναβάθμισης
@@ -60,9 +59,31 @@ sudo ln -s $PWD/shelldio.sh /usr/bin/shelldio
 Μπείτε στον φάκελο shelldio που κάνατε `git clone` και τρέξετε κατά διαστήματα "git pull". Στην συνέχεια αντιγράψτε μόνο το αρχείο "all_stations.txt" το οποίο μπορεί να έχει ενημερωθεί με νέους σταθμούς η διορθωμένα λινκ:
 
 ```
-cp .shelldio/all_stations.txt ~/.shelldio/all_stations.txt
+cp ~/shelldio/.shelldio/all_stations.txt ~/.shelldio/all_stations.txt
 ```
 
+## Οδηγίες Απεγκατάστασης
+
+Ανάλογα του τρόπου εγκατάστασης μπορείτε να απεγκαταστείσετε το Shelldio με τους παρακάτω τρόπους
+
+### Arch Linux
+
+Μπορείτε να το απεγκαταστήσετε με τον AUR helper σας π.χ.:
+```
+yay -Rcsu shelldio
+```
+### Υπόλοιπες διανομές
+
+Τρέξτε τις ποαρακάτω εντολές :
+
+```
+sudo unlink /usr/bin/shelldio
+rm -rf ~/.shelldio
+```
+Τέλος μπορείτε να διαγράψετε κιαι τον φάκελο που κατεβήκε με `git clone`
+```
+rm -rf ~/shelldio
+```
 ## Οδηγίες χρήσης
 
 Εξ'ορισμού το script αν δε δοθεί όρισμα στο τερματικό ανοίγει τη λίστα με τους σταθμούς που είναι αποθηκευμένοι στο ```~/.shelldio/my_stations.txt```. 
