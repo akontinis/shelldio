@@ -18,7 +18,7 @@ list_stations(){
 while IFS='' read -r line || [[ -n "$line" ]]; do
     num=$(( num + 1 ))
     echo ["$num"] "$line" | cut -d "," -f1		
-done < $1
+done < "$1"
 }
 
 ### Λίστα με τις επιλογές σαν 1ο όρισμα ./shelldio --[option]
