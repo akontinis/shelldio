@@ -21,6 +21,11 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 done < "$1"
 }
 
+# Πληροφορίες που εμφανίζονται μετά την επιλογή του σταθμού
+info() {
+echo -ne "| Η ώρα είναι $(date +"%T")\n| Ακούτε $stathmos_name\n| Πατήστε Q/q για έξοδο ή R/r για επιστροφή στη λίστα σταθμών"
+}
+
 ### Λίστα με τις επιλογές σαν 1ο όρισμα ./shelldio --[option]
 
 if [ "$1" == "--help" ]; then
@@ -32,14 +37,24 @@ elif [ "$1" == "--list" ]; then
 	list_stations "$HOME/.shelldio/all_stations.txt"
 	exit 0
 elif [ "$1" == "--add" ]; then
-	if [ "$2" == '' ]; then
-		echo "Για να προσθέσεις τον αγαπημένο σταθμό στο my_stations.txt"
-		echo "Η σύνταξη είναι"
-		echo "shelldio --add [αριθμός-της-επιλογής-σου]"
-		sleep 2
-	else 
-		echo "Προστέθηκε"
-	fi
+	echo "Εμφάνιση Λίστας σταθμών"
+	sleep 2
+	list_stations "$HOME/.shelldio/all_stations.txt"
+	while true
+	do
+	read -rp "Επέλεξε αριθμού σταθμού  (Q/q για έξοδο): " input_station
+		if [[ $input_station = "q" ]] || [[ $input_station = "Q" ]]; then
+			echo "Έξοδος..."
+			exit 0
+		elif [ "$input_station" -gt 0 ] && [ "$input_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
+			stathmos_name=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
+			stathmos_url=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
+			echo "$stathmos_name,$stathmos_url" >> "$HOME/.shelldio/my_stations.txt"
+			echo " Προστέθηκε ο σταθμός $stathmos_name."
+		else
+			echo "Αριθμός εκτός λίστας"
+		fi
+	done
 	exit 0
 fi
 
@@ -62,6 +77,11 @@ if [ "$#" -eq "0" ]		    #στην περίπτωση που δε δοθεί ό�
 			if [ -f "$HOME/.shelldio/my_stations.txt" ]; then
 				stations="$HOME/.shelldio/my_stations.txt"
 			else
+				if [ ! -f "$HOME/.shelldio/all_stations.txt" ]; then
+					echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
+        			sleep 2
+					curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+				fi	
 				stations="$HOME/.shelldio/all_stations.txt"
 			fi
 		else 
@@ -77,17 +97,13 @@ else
 	stations=$1
 fi
 
-info() {
-tput civis      -- invisible  # Εξαφάνιση cursor
-echo -ne "| Η ώρα είναι $(date +"%T")\n| Ακούτε $stathmos_name\n| Πατήστε Q/q για έξοδο ή R/r για επιστροφή στη λίστα σταθμών"
-}
+while true 
+do
+
 echo "---------------------------------------------------------"
 echo "Shelldio - ακούστε online ραδιόφωνο από το τερματικό"
 echo "---------------------------------------------------------"
 echo "https://github.com/CerebruxCode/Shelldio"
-
-while true 
-do
 echo "---------------------------------------------------------"
 num=0 
 
@@ -101,19 +117,14 @@ if [ ! -f "$HOME"/.shelldio/my_stations.txt ]; then
 echo "---------------------------------------------------------"
 read -rp "Διαλέξτε Σταθμό (Q/q για έξοδο): " input_play
 
-if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]] 
-   	then
+if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]]; then
 	echo "Έξοδος..."
-	tput cnorm   -- normal  # Εμφάνιση cursor
 	exit 0
-fi
-
-if [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-	then
+elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
 	stathmos_name=$(< "$stations" head -n$(( "$input_play" )) | tail -n1 | cut -d "," -f1)
 	stathmos_url=$(< "$stations" head -n$(( "$input_play" )) | tail -n1 | cut -d "," -f2)
 	break
-	else
+else
 	echo "Αριθμός εκτός λίστας"
 	sleep 2
 	clear
@@ -131,13 +142,11 @@ do
 	if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]]; then
 		clear
 		echo "Έξοδος..."
-		tput cnorm   -- normal  # Εμφάνιση cursor
     	exit 0
     elif [[ $input_play = "r" ]] || [[ $input_play = "R" ]]; then
 	killall -9 mpv &> /dev/null
 	clear
 	echo "Επιστροφή στη λίστα σταθμών"
-	tput cnorm   -- normal  # Εμφάνιση cursor
 	sleep 2
 	clear
 	break
