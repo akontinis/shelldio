@@ -56,6 +56,30 @@ elif [ "$1" == "--add" ]; then
 		fi
 	done
 	exit 0
+elif [ "$1" == "--remove" ]; then
+	if [ ! -f "$HOME/.shelldio/my_stations.txt" ]; then
+		echo "Δεν έχει δημιουργηθεί το αρχείο my_stations."
+	else
+		echo "Εμφάνιση λίστας προσωπικών σταθμών"
+		sleep 2
+		list_stations "$HOME/.shelldio/my_stations.txt"
+		while true
+		do
+		read -rp "Επέλεξε αριθμού σταθμού  (Q/q για έξοδο): " remove_station
+		if [[ $remove_station = "q" ]] || [[ $remove_station = "Q" ]]; then
+			echo "Έξοδος..."
+			exit 0
+		elif [ "$remove_station" -gt 0 ] && [ "$remove_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
+			stathmos_name=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
+			stathmos_url=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
+			sed -i "$num""d" "$HOME/.shelldio/my_stations.txt"
+			echo "Διαγράφηκε ο σταθμός $stathmos_name."
+		else
+			echo "Αριθμός εκτός λίστας"
+		fi
+		done
+	exit 0
+	fi
 fi
 
 ### Base script 
