@@ -114,12 +114,12 @@ while [ "$1" != "" ]; do
 			do
 			if [ -f "$my_stations" ]; then 
 				read -rp "Θέλετε να εμφανισθούν όλοι οι σταθμοί ή οι αγαπημένοι σας σταθμοί; (a=all | f=favourites):" list_choice
-				if [ $list_choice == "a" ]; then
+				if [ "$list_choice" == "a" ]; then
 					echo "Εμφάνιση όλων των σταθμών:"
 					sleep 1
 					list_stations "$all_stations"
 					exit 0
-				elif [ $list_choice == "f" ]; then 
+				elif [ "$list_choice" == "f" ]; then 
 					echo "Εμφάνιση αγαπημένων σταθμών:"
 					sleep 1 
 				 	list_stations "$my_stations"
