@@ -12,7 +12,31 @@
 #
 #
 
+### Variable List
+all_stations="$HOME/.shelldio/all_stations.txt"
+my_stations="$HOME/.shelldio/my_stations.txt"
+
 ### Functions List
+
+# Μήνυμα καλωσορίσματος
+
+welcome_screen() {
+	echo " __________________________________________"
+	echo "|                 Shelldio                 |"
+	echo "|       Ακούστε τους αγαπημένους σας       |"
+	echo "|        σταθμούς από το τερματικό         |"
+	echo "| https://github.com/CerebruxCode/Shelldio |"
+	echo "|__________________________________________|"
+}
+
+option_detail() {
+	echo "--help: Εμφανίζει πληροφορίες για την χρήση της εφαρμογής"
+	echo -e "--list: Εμφανίζει την λίστα με τους σταθμούς.\n  Βρίσκεται στο ~/.shelldio/all_stations.txt"
+	echo -e "--add : Δημιουργεί το αρχείο ~/.shelldio/my_stations.txt\n  και μεταφέρει τους αγαπημένους σας σταθμούς"
+	echo "--remove: Διαγράφει σταθμούς της επιλογής σας από το my_stations.txt"
+}
+
+
 # Δημιουργεί και εμφανίζει σε λίστα τους σταθμούς στο txt file που δέχεται σαν flag
 list_stations(){
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -26,20 +50,10 @@ info() {
 echo -ne "| Η ώρα είναι $(date +"%T")\n| Ακούτε $stathmos_name\n| Πατήστε Q/q για έξοδο ή R/r για επιστροφή στη λίστα σταθμών"
 }
 
-### Λίστα με τις επιλογές σαν 1ο όρισμα ./shelldio --[option]
-
-if [ "$1" == "--help" ]; then
-	echo "Πληροφορίες για δημιουργία my_stations.txt"
-	exit 0
-elif [ "$1" == "--list" ]; then
-	echo "Εμφάνιση όλων των σταθμών στο αρχείο all_stations.txt"
+add_stations() {
+	echo "Εμφάνιση λίστας σταθμών"
 	sleep 2
-	list_stations "$HOME/.shelldio/all_stations.txt"
-	exit 0
-elif [ "$1" == "--add" ]; then
-	echo "Εμφάνιση Λίστας σταθμών"
-	sleep 2
-	list_stations "$HOME/.shelldio/all_stations.txt"
+	list_stations $all_stations
 	while true
 	do
 	read -rp "Επέλεξε αριθμού σταθμού  (Q/q για έξοδο): " input_station
@@ -47,18 +61,22 @@ elif [ "$1" == "--add" ]; then
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$input_station" -gt 0 ] && [ "$input_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			stathmos_name=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
-			stathmos_url=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
-			echo "$stathmos_name,$stathmos_url" >> "$HOME/.shelldio/my_stations.txt"
+			stathmos_name=$(< "$all_stations" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
+			stathmos_url=$(< "$all_stations" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
+			echo "$stathmos_name,$stathmos_url" >> "$my_stations"
 			echo " Προστέθηκε ο σταθμός $stathmos_name."
 		else
 			echo "Αριθμός εκτός λίστας"
 		fi
 	done
 	exit 0
-elif [ "$1" == "--remove" ]; then
+
+}
+
+remove_station(){
 	if [ ! -f "$HOME/.shelldio/my_stations.txt" ]; then
 		echo "Δεν έχει δημιουργηθεί το αρχείο my_stations."
+		echo "Για πληροφορίες τρέξε την παράμετρο --help."
 	else
 		echo "Εμφάνιση λίστας προσωπικών σταθμών"
 		sleep 2
@@ -70,17 +88,46 @@ elif [ "$1" == "--remove" ]; then
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$remove_station" -gt 0 ] && [ "$remove_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			stathmos_name=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
-			stathmos_url=$(< "$HOME/.shelldio/all_stations.txt" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
+			stathmos_name=$(< "$HOME/.shelldio/my_stations.txt" head -n$(( "$remove_station" )) | tail -n1 | cut -d "," -f1)
+			stathmos_url=$(< "$HOME/.shelldio/my_stations.txt" head -n$(( "$remove_station" )) | tail -n1 | cut -d "," -f2)
 			sed -i "$num""d" "$HOME/.shelldio/my_stations.txt"
 			echo "Διαγράφηκε ο σταθμός $stathmos_name."
 		else
 			echo "Αριθμός εκτός λίστας"
 		fi
 		done
-	exit 0
 	fi
-fi
+}
+
+### Λίστα με τις επιλογές σαν 1ο όρισμα ./shelldio --[option]
+
+while [ "$1" != "" ]; do
+	case $1 in 
+		-h | --help ) 
+			welcome_screen && option_detail
+			exit
+			;;
+		-l | --list ) 
+			welcome_screen 
+			echo "Εμφάνιση όλων των σταθμών."
+			sleep 2 
+		 	list_stations $all_stations
+			exit
+			;;
+		-a | --add )
+			welcome_screen
+			add_stations
+			exit
+			;;
+		-r | --remove )
+			welcome_screen
+			remove_station
+			exit
+			;;
+	esac
+done
+
+
 
 ### Base script 
 
@@ -95,45 +142,39 @@ if  ! command -v mpv &> /dev/null ; then
 	exit
 fi
 
-if [ "$#" -eq "0" ]		    #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
-	then
-		if [ -d "$HOME/.shelldio/" ]; then 
-			if [ -f "$HOME/.shelldio/my_stations.txt" ]; then
-				stations="$HOME/.shelldio/my_stations.txt"
-			else
-				if [ ! -f "$HOME/.shelldio/all_stations.txt" ]; then
-					echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
-        			sleep 2
-					curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
-				fi	
-				stations="$HOME/.shelldio/all_stations.txt"
-			fi
-		else 
-			echo "Δημιουργείτε ο φάκελος .shelldio ο οποίος θα περιέχει τα αρχεία των σταθμών."
-			sleep 2
-			mkdir -p "$HOME/.shelldio"
-			echo "Γίνεται η λήψη του αρχείου με όλους τους σταθμούς."
-			sleep 2
-			curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
-	    	stations="$HOME/.shelldio/all_stations.txt"
+if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
+	if [ -d "$HOME/.shelldio/" ]; then 
+		if [ -f "$my_stations" ]; then
+			stations="$my_stations"
+		else
+			if [ ! -f "$all_stations" ]; then
+				echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
+    			sleep 2
+				curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+			fi	
+			stations="$all_stations"
 		fi
-else 
-	stations=$1
+	else 
+		echo "Δημιουργείτε ο φάκελος .shelldio ο οποίος θα περιέχει τα αρχεία των σταθμών."
+		sleep 2
+		mkdir -p "$HOME/.shelldio"
+		echo "Γίνεται η λήψη του αρχείου με όλους τους σταθμούς."
+		sleep 2
+		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+    	stations="$all_stations"
+	fi
 fi
 
 while true 
 do
 
-echo "---------------------------------------------------------"
-echo "Shelldio - ακούστε online ραδιόφωνο από το τερματικό"
-echo "---------------------------------------------------------"
-echo "https://github.com/CerebruxCode/Shelldio"
-echo "---------------------------------------------------------"
+welcome_screen 
+
 num=0 
 
 list_stations "$stations"
 
-if [ ! -f "$HOME"/.shelldio/my_stations.txt ]; then
+if [ ! -f "$my_stations" ]; then
 		echo "Από προεπιλογή η λίστα σταθμών περιέρχει όλους τους σταθμούς."
 		echo "Μπορείς να δημιουργήσεις ένα αρχείο με τους αγαπημένους σου σταθμούς."
 		echo "./shelldio --help για να δεις πως μπορείς να το κάνεις!"
