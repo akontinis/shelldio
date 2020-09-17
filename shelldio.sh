@@ -175,7 +175,11 @@ fi
 if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
 	if [ -d "$HOME/.shelldio/" ]; then 
 		if [ -f "$my_stations" ]; then
-			stations="$my_stations"
+			if [ -s "$my_stations" ]; then
+				stations="$my_stations"
+			else
+				stations="$all_stations"
+			fi
 		else
 			if [ ! -f "$all_stations" ]; then
 				echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
@@ -208,7 +212,12 @@ if [ ! -f "$my_stations" ]; then
 		echo "Από προεπιλογή η λίστα σταθμών περιέρχει όλους τους σταθμούς."
 		echo "Μπορείς να δημιουργήσεις ένα αρχείο με τους αγαπημένους σου σταθμούς."
 		echo "./shelldio --help για να δεις πως μπορείς να το κάνεις!"
-	fi	
+elif [ ! -s "$my_stations" ]; then
+	echo "Το αρχείο my_stations.txt υπάρχει αλλά είναι κενό."
+	echo "Θα φορτώσει η λίστα με όλους τους σταθμούς."
+	echo "Αν θέλεις να προσθέσεις αγαπημένους σταθμούς δοκίμασε την επιλογή add"
+	echo "./shelldio --add"
+fi	
 echo "---------------------------------------------------------"
 read -rp "Διαλέξτε Σταθμό (Q/q για έξοδο): " input_play
 
