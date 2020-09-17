@@ -22,7 +22,7 @@ my_stations="$HOME/.shelldio/my_stations.txt"
 
 welcome_screen() {
 	echo '                                       .-_   _-.'
-	echo '                                      / /     \ \'
+	echo '                                      / /     \ \ '
 	echo '                                     ( ( (-o-) ) )'
 	echo '                                      \.\_-!-_/./'
 	echo '                                         --|--'
