@@ -53,7 +53,7 @@ echo -ne "| Η ώρα είναι $(date +"%T")\n| Ακούτε $stathmos_name\n|
 add_stations() {
 	echo "Εμφάνιση λίστας σταθμών"
 	sleep 2
-	list_stations $all_stations
+	list_stations "$all_stations"
 	while true
 	do
 	read -rp "Επέλεξε αριθμού σταθμού  (Q/q για έξοδο): " input_station
@@ -111,7 +111,7 @@ while [ "$1" != "" ]; do
 			welcome_screen 
 			echo "Εμφάνιση όλων των σταθμών."
 			sleep 2 
-		 	list_stations $all_stations
+		 	list_stations "$all_stations"
 			exit
 			;;
 		-a | --add )
