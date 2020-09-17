@@ -45,6 +45,7 @@ option_detail() {
 	echo -e "--list: Εμφανίζει την λίστα με τους σταθμούς.\n  Βρίσκεται στο ~/.shelldio/all_stations.txt"
 	echo -e "--add : Δημιουργεί το αρχείο ~/.shelldio/my_stations.txt\n  και μεταφέρει τους αγαπημένους σας σταθμούς"
 	echo "--remove: Διαγράφει σταθμούς της επιλογής σας από το my_stations.txt"
+	echo "--fresh : Συγχρονίζει την λίστα σταθμών με αυτούς στο github repo. "
 }
 
 
@@ -152,6 +153,13 @@ while [ "$1" != "" ]; do
 		-r | --remove )
 			welcome_screen
 			remove_station
+			exit
+			;;
+		-f | --fresh )
+			welcome_screen
+			echo "Γίνεται λήψη του αρχείου των σταθμών από το αποθετήριο."
+			sleep 1
+			curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 			exit
 			;;
 	esac
