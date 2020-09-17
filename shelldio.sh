@@ -127,6 +127,9 @@ while [ "$1" != "" ]; do
 				else 
 					echo "Λάθος επιλογή"
 				fi
+			else
+				list_stations "$all_stations"
+				exit 0
 			fi
 			done
 			;;
