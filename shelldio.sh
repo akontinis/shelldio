@@ -108,11 +108,26 @@ while [ "$1" != "" ]; do
 			exit
 			;;
 		-l | --list ) 
-			welcome_screen 
-			echo "Εμφάνιση όλων των σταθμών."
-			sleep 2 
-		 	list_stations "$all_stations"
-			exit
+			welcome_screen
+			while true
+			do
+			if [ -f "$my_stations" ]; then 
+				read -rp "Θέλετε να εμφανισθούν όλοι οι σταθμοί ή οι αγαπημένοι σας σταθμοί; (a=all | f=favourites):" list_choice
+				if [ $list_choice == "a" ]; then
+					echo "Εμφάνιση όλων των σταθμών:"
+					sleep 1
+					list_stations "$all_stations"
+					exit 0
+				elif [ $list_choice == "f" ]; then 
+					echo "Εμφάνιση αγαπημένων σταθμών:"
+					sleep 1 
+				 	list_stations "$my_stations"
+					exit 0
+				else 
+					echo "Λάθος επιλογή"
+				fi
+			fi
+			done
 			;;
 		-a | --add )
 			welcome_screen
