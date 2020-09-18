@@ -222,6 +222,8 @@ if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί ό
 		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
     	stations="$all_stations"
 	fi
+else
+	stations="$1"
 fi
 
 while true 
