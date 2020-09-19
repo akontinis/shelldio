@@ -142,7 +142,7 @@ while [ "$1" != "" ]; do
 			while true
 			do
 			if [ -f "$my_stations" ]; then 
-				read -rp "Θέλετε να εμφανισθούν όλοι οι σταθμοί ή οι αγαπημένοι σας σταθμοί; (a=all | f=favourites):" list_choice
+				read -rp "Θέλετε να εμφανισθούν όλοι οι σταθμοί ή οι αγαπημένοι σας σταθμοί; (a=Όλοι οι σταθμοί | f=Αγαπημένοι):" list_choice
 				if [ "$list_choice" == "a" ]; then
 					echo "Εμφάνιση όλων των σταθμών:"
 					sleep 1
@@ -154,7 +154,7 @@ while [ "$1" != "" ]; do
 				 	list_stations "$my_stations"
 					exit 0
 				else 
-					echo "Λάθος επιλογή"
+					echo "Λάθος επιλογή, θα πρέπει να γράψετε a ή f και να πατήσετε enter"
 				fi
 			else
 				list_stations "$all_stations"
@@ -246,7 +246,7 @@ elif [ ! -s "$my_stations" ]; then
 	echo "shelldio --add"
 fi	
 echo "---------------------------------------------------------"
-read -rp "Διαλέξτε Σταθμό (Q/q για έξοδο): " input_play
+read -rp "Διαλέξτε Σταθμό (ή Q/q για έξοδο): " input_play
 
 if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]]; then
 	echo "Έξοδος..."
@@ -279,7 +279,10 @@ do
 	do
         	url="$(ps -o command= -p "$pid" | awk '{print $2}')"
 		if [[ "$url" == "$stathmos_url" ]]; then
+			echo "Έξοδος..."
 			kill "$pid"
+		else
+			printf "Απέτυχε ο αυτόματος τερματισμός. \nΠάτα τον συνδυασμό Ctrl+C ή κλείσε το τερματικό \nή τερμάτισε το Shelldio απο τις διεργασίες του συστήματος"
 		fi
 	done
 	clear
