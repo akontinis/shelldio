@@ -176,7 +176,7 @@ while [ "$1" != "" ]; do
 			welcome_screen
 			echo "Γίνεται λήψη του αρχείου των σταθμών από το αποθετήριο."
 			sleep 1
-			curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+			curl -sL https://github.com/CerebruxCode/shelldio/blob/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 			exit
 			;;
 	esac
@@ -209,7 +209,7 @@ if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί ό
 			if [ ! -f "$all_stations" ]; then
 				echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
     			sleep 2
-				curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+				curl -sL https://github.com/CerebruxCode/shelldio/blob/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 			fi	
 			stations="$all_stations"
 		fi
@@ -219,7 +219,7 @@ if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί ό
 		mkdir -p "$HOME/.shelldio"
 		echo "Γίνεται η λήψη του αρχείου με όλους τους σταθμούς."
 		sleep 2
-		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/features/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+		curl -sL https://github.com/CerebruxCode/shelldio/blob/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
     	stations="$all_stations"
 	fi
 else
