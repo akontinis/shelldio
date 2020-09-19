@@ -275,15 +275,8 @@ do
 		echo "Έξοδος..."
     	exit 0
     elif [[ $input_play = "r" ]] || [[ $input_play = "R" ]]; then
-	pid=$(ps -e | grep mpv | awk '{print $1}')
-	pid_url=$(ps -ef | grep "$pid" | grep mpv | awk '{print $9}')
-	if [[ "$pid_url" == "$stathmos_url" ]]; then
-		echo -e "\nΣταμάταει ο "$stathmos_url""
-		sleep 1
-		kill "$pid" &> /dev/null
-	else 
-		killall -9 mpv &> /dev/null 
-	fi
+	pid=$(ps -ef | grep mpv | grep "$stathmos_url" | awk '{print $2}')
+	kill "$pid"
 	clear
 	echo "Επιστροφή στη λίστα σταθμών"
 	sleep 2
