@@ -29,6 +29,8 @@ Nostos 100.6,https://neos.win:37878/stream
 Party FM 104,https://radio.streamings.gr:9006/stream
 Pepper 96.6,http://pepper966.live24.gr:80/pepperorigin
 Piqeras DeeJay 105.6,http://rosetta.shoutca.st:8270/stream
+Point Radio Pop,http://78.46.149.5:8029/stream2
+Point Radio Λαικό,http://78.46.149.5:8029/stream
 Radio Gold @net,http://radiogold.live24.gr:80/radiogold
 Radio Hot Lips Athens,http://netradio.live24.gr:80/radiohotlips
 Real FM 97.8,http://realfm.live24.gr:80/realfm
