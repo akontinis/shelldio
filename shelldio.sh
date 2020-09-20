@@ -23,7 +23,7 @@ validate_csv() {
 }
 
 validate_station_lists() {
-	if [[ $(validate_csv $all_stations) -eq 0 ]]; then
+	if [[ $(validate_csv "$all_stations") -eq 0 ]]; then
 		echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
 		echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
 		exit 1
