@@ -89,11 +89,9 @@ add_stations() {
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$input_station" -gt 0 ] && [ "$input_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			station=$(sed "${input_station}q;d" "$stations")
+			station=$(sed "${input_station}q;d" "$all_stations")
 			stathmos_name=$(echo "$station" | cut -d "," -f1)
 			stathmos_url=$(echo "$station" | cut -d "," -f2)
-			#stathmos_name=$(< "$all_stations" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
-			#stathmos_url=$(< "$all_stations" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
 			echo "$stathmos_name,$stathmos_url" >>"$my_stations"
 			echo " Προστέθηκε ο σταθμός $stathmos_name."
 		else
@@ -118,9 +116,9 @@ remove_station() {
 				echo "Έξοδος..."
 				exit 0
 			elif [ "$remove_station" -gt 0 ] && [ "$remove_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-				stathmos_name=$(head <"$HOME/.shelldio/my_stations.txt" -n$(("$remove_station")) | tail -n1 | cut -d "," -f1)
-				stathmos_url=$(head <"$HOME/.shelldio/my_stations.txt" -n$(("$remove_station")) | tail -n1 | cut -d "," -f2)
-				sed -i "$remove_station""d" "$HOME/.shelldio/my_stations.txt"
+				station=$(sed "${remove_station}q;d" "$my_stations")
+				stathmos_name=$(echo "$station" | cut -d "," -f1)
+				grep -v "$stathmos_name" "$HOME/.shelldio/my_stations.txt" > "$HOME/.shelldio/my_stations.tmp" && mv "$HOME/.shelldio/my_stations.tmp" "$HOME/.shelldio/my_stations.txt"
 				echo "Διαγράφηκε ο σταθμός $stathmos_name."
 			else
 				echo "Αριθμός εκτός λίστας"
@@ -178,6 +176,11 @@ while [ "$1" != "" ]; do
 		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 		exit 0
 		;;
+	*)
+		echo "Λάθος επιλογή."
+		echo "Εκτέλεσε shelldio --help για να δεις τις δυνατές επιλογές!"
+		exit 0
+		;;
 	esac
 done
 
@@ -191,7 +194,7 @@ if [[ $player = 1 ]]; then
 	echo -e "Το Shelldio χρειάζεται το MPV player αλλά δεν βρέθηκε στο σύστημά σας.\nΠαρακαλούμε εγκαταστήστε το MPV πριν τρέξετε το Shelldio"
 	exit 1
 fi
-for binary in curl info sleep clear killall; do
+for binary in grep curl info sleep clear killall; do
 	if ! command -v $binary &>/dev/null; then
 		echo -e "Το Shelldio χρειάζεται το '$binary'\nΠαρακαλούμε εγκαταστήστε το πριν τρέξετε το Shelldio"
 		exit 1
@@ -256,8 +259,9 @@ while true; do
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			stathmos_name=$(head <"$stations" -n$(("$input_play")) | tail -n1 | cut -d "," -f1)
-			stathmos_url=$(head <"$stations" -n$(("$input_play")) | tail -n1 | cut -d "," -f2)
+			station=$(sed "${input_play}q;d" "$stations")
+			stathmos_name=$(echo "$station" | cut -d "," -f1)
+			stathmos_url=$(echo "$station" | cut -d "," -f2)
 			break
 		else
 			echo "Αριθμός εκτός λίστας"
