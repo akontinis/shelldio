@@ -245,8 +245,9 @@ while true; do
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			stathmos_name=$(head <"$stations" -n$(("$input_play")) | tail -n1 | cut -d "," -f1)
-			stathmos_url=$(head <"$stations" -n$(("$input_play")) | tail -n1 | cut -d "," -f2)
+			station=$(sed "${input_play}q;d" "$stations")
+			stathmos_name=$(echo "$station" | cut -d "," -f1)
+			stathmos_url=$(echo "$station" | cut -d "," -f2)
 			break
 		else
 			echo "Αριθμός εκτός λίστας"
