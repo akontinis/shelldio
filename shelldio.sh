@@ -19,18 +19,18 @@ my_stations="$HOME/.shelldio/my_stations.txt"
 ### Functions List
 
 validate_csv() {
-	awk 'BEGIN{FS=","}!n{n=NF}n!=NF{failed=1;exit}END{print !failed}' $1
+	awk 'BEGIN{FS=","}!n{n=NF}n!=NF{failed=1;exit}END{print !failed}' "$1"
 }
 
 validate_station_lists() {
-	if [[ `validate_csv $all_stations` -eq 0 ]]; then
+	if [[ $(validate_csv $all_stations) -eq 0 ]]; then
 		echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
 		echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
 		exit 1
 	fi
 
 	if [ -f "$my_stations" ]; then
-		if [[ `validate_csv "$my_stations"` -eq 0 ]]; then
+		if [[ $(validate_csv "$my_stations") -eq 0 ]]; then
 			echo "Πρόβλημα: Η λίστα σταθμών: $my_stations δεν είναι έγκυρη"
 			echo "Εκτέλεσε shelldio --reset για να διαγράψεις τη λίστα αγαπημένων"
 			echo "Στη συνέχεια πρόσθεσε ξανά τους αγαπημένους σου σταθμούς"
@@ -152,7 +152,7 @@ remove_station() {
 
 reset_favorites() {
 	echo "Πραγματοποιείται διαγραφή του αρχείου αγαπημένων.."
-	rm -f $my_stations
+	rm -f "$my_stations"
 }
 
 ### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio --[option]
