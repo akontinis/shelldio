@@ -176,6 +176,11 @@ while [ "$1" != "" ]; do
 		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 		exit 0
 		;;
+	*)
+		echo "Λάθος επιλογή."
+		echo "Εκτέλεσε shelldio --help για να δεις τις δυνατές επιλογές!"
+		exit 0
+		;;
 	esac
 done
 
