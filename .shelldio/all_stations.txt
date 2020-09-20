@@ -117,7 +117,7 @@ Zoo Radio 90.8,http://netradio.live24.gr/zoo908thess
 Ραδιοκύματα 104.4,http://s1.onweb.gr:8812/
 Ραδιόφωνο 904 90.4,http://icecast.902.gr:8000/904
 ΣΚΑΪ 100.3,http://skai.live24.gr:80/skai1003-2
-Σοκ FM 104.8 - Χαλκίδα,http://sokfm.lalala.gr:8000/;listen.pls
+Σοκ FM 104.8 - Χαλκίδα,http://sokfm.lalala.gr:8000
 Στο Μωβ ,http://stream.radiojar.com:80/kk01hepkb.mp3
 Στο κόκκινο 105.5,http://stream.radiojar.com:80/kokkino-ath.mp3
 Στο κόκκινο 91.4,http://ample-01.radiojar.com/275p8ssmb?
