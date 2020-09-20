@@ -4,7 +4,7 @@
 
 ## Οδηγίες εγκατάστασης
 
-Το Shelldio είναι συμβατό με Linux, BSD και MacOS. Απαιτείται το πακέτο ```mpv``` για να δουλέψει. Μπορείτε να το εγκαταστήσετε από το αποθετήριο λογισμικών του λειτουργικού σας.
+Το Shelldio είναι συμβατό με Linux, BSD και macOS. Απαιτείται το πακέτο ```mpv``` για να δουλέψει. Μπορείτε να το εγκαταστήσετε από το αποθετήριο λογισμικών του λειτουργικού σας.
 
 ### Arch Linux
 
@@ -57,10 +57,15 @@ git clone https://github.com/CerebruxCode/shelldio ~/shelldio
 sudo ln -s ~/shelldio/shelldio.sh /usr/bin/shelldio
 ```
 
-#### Σε MacOS (μέσω [Brew](https://docs.brew.sh/Installation))
+#### Σε macOS (μέσω [Brew](https://docs.brew.sh/Installation))
 
 ```bash
 brew install mpv
+```
+
+```bash
+git clone https://github.com/CerebruxCode/shelldio ~/shelldio
+sudo ln -s ~/shelldio/shelldio.sh /usr/local/bin/shelldio
 ```
 
 ## Οδηγίες Αναβάθμισης
