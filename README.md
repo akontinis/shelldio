@@ -16,9 +16,9 @@ yay -S shelldio
 
 το οποίο θα κάνει αυτόματα εγκατάσταση και το `mpv` που χρειάζεστε. Τώρα μπορείτε να πάτε παρακάτω στις οδηγίες χρήσης.
 
-### Στις υπόλοιπες διανομές
+### Στα υπόλοιπα λειτουργικά συστήματα
 
-Για να το εγκαταστήσετε στις υπόλοιπες διανομές πρώτα κάνετε εγκατάσταση το **Mpv**
+Για να το εγκαταστήσετε στα υπόλοιπα λειτουργικά συστήματα πρώτα κάνετε εγκατάσταση το **MPV**
 
 #### Σε Debian based διανομές
 
@@ -50,20 +50,13 @@ sudo yum -y install mpv
 sudo pkg install mpv
 ```
 
-έπειτα τρέχετε μια μια τις παρακάτω εντολές:
-
-```bash
-git clone https://github.com/CerebruxCode/shelldio ~/shelldio
-sudo ln -s ~/shelldio/shelldio.sh /usr/bin/shelldio
-```
-
 #### Σε macOS (μέσω [Brew](https://docs.brew.sh/Installation))
 
 ```bash
 brew install mpv
 ```
 
-έπειτα τρέχετε μια μια τις παρακάτω εντολές:
+Τέλος αφού έχετε κάνει εγκατάσταση το **MPV** τρέχετε μια μια τις παρακάτω εντολές για να εγκαταστήσετε το Shelldio:
 
 ```bash
 git clone https://github.com/CerebruxCode/shelldio ~/shelldio
