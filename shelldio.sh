@@ -182,11 +182,21 @@ while [ "$1" != "" ]; do
 done
 
 ### Base script
-# Έλεγχος αν υπάρχει ο mpv
-if ! command -v mpv &>/dev/null; then
-	echo -e "Το Shelldio χρειάζεται το MPV player αλλά δεν βρέθηκε στο σύστημά σας.\nΠαρακαλούμε εγκαταστήστε το MPV πριν τρέξετε το Shelldio "
+# Έλεγχος προαπαιτούμενων binaries
+player=$(command -v mpv 2>/dev/null || echo "1")
+
+if [[ $player = 1 ]]; then
+	echo "Έλεγχος προαπαιτούμενων για το Shelldio"
+	sleep 1
+	echo -e "Το Shelldio χρειάζεται το MPV player αλλά δεν βρέθηκε στο σύστημά σας.\nΠαρακαλούμε εγκαταστήστε το MPV πριν τρέξετε το Shelldio"
 	exit 1
 fi
+for binary in curl info sleep clear killall; do
+	if ! command -v $binary &>/dev/null; then
+		echo -e "Το Shelldio χρειάζεται το '$binary'\nΠαρακαλούμε εγκαταστήστε το πριν τρέξετε το Shelldio"
+		exit 1
+	fi
+done
 
 while true; do
 	terms=0
