@@ -20,7 +20,7 @@
 
 #### Σε Debian based διανομές
 
-```sudo apt install -υ mpv```
+```sudo apt install -y mpv```
 
 #### Σε Fedora based διανομές
 
