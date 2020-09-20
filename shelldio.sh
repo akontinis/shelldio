@@ -135,7 +135,7 @@ while [ "$1" != "" ]; do
 	case $1 in
 	-h | --help)
 		option_detail
-		exit
+		exit 0
 		;;
 	-l | --list)
 		welcome_screen
@@ -164,19 +164,19 @@ while [ "$1" != "" ]; do
 	-a | --add)
 		welcome_screen
 		add_stations
-		exit
+		exit 0
 		;;
 	-r | --remove)
 		welcome_screen
 		remove_station
-		exit
+		exit 0
 		;;
 	-f | --fresh)
 		welcome_screen
 		echo "Γίνεται λήψη του αρχείου των σταθμών από το αποθετήριο."
 		sleep 1
 		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
-		exit
+		exit 0
 		;;
 	esac
 done
@@ -190,7 +190,7 @@ while true; do
 	# Έλεγχος αν υπάρχει ο mpv
 	if ! command -v mpv &>/dev/null; then
 		echo "Δεν βρέθηκε συμβατός player. Συμβατός player είναι ο mpv"
-		exit
+		exit 1
 	fi
 
 	if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
