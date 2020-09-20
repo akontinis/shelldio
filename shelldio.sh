@@ -18,6 +18,27 @@ my_stations="$HOME/.shelldio/my_stations.txt"
 
 ### Functions List
 
+validate_csv() {
+	awk 'BEGIN{FS=","}!n{n=NF}n!=NF{failed=1;exit}END{print !failed}' $1
+}
+
+validate_station_lists() {
+	if [[ `validate_csv $all_stations` -eq 0 ]]; then
+		echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
+		echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
+		exit 1
+	fi
+
+	if [ -f "$my_stations" ]; then
+		if [[ `validate_csv "$my_stations"` -eq 0 ]]; then
+			echo "Πρόβλημα: Η λίστα σταθμών: $my_stations δεν είναι έγκυρη"
+			echo "Εκτέλεσε shelldio --reset για να διαγράψεις τη λίστα αγαπημένων"
+			echo "Στη συνέχεια πρόσθεσε ξανά τους αγαπημένους σου σταθμούς"
+			exit 1
+		fi
+	fi
+}
+
 # Μήνυμα καλωσορίσματος
 
 welcome_screen() {
@@ -59,9 +80,11 @@ option_detail() {
 	
 	-h, --help: Εμφανίζει πληροφορίες για την χρήση της εφαρμογής
 	
-	-l, --list: Εμφανίζει την λίστα με τους ραδιοφωνικούς σταθμούς.
+	-l, --list: Εμφανίζει την λίστα με τους ραδιοφωνικούς σταθμούς
 	
 	-r, --remove: Διαγράφει σταθμούς της επιλογής σας από το my_stations.txt
+
+	--reset: Καθαρίζει τη λίστα αγαπημένων, διαγράφοντας το αρχείο my_stations.txt
 EOF
 }
 
@@ -127,6 +150,11 @@ remove_station() {
 	fi
 }
 
+reset_favorites() {
+	echo "Πραγματοποιείται διαγραφή του αρχείου αγαπημένων.."
+	rm -f $my_stations
+}
+
 ### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio --[option]
 
 while [ "$1" != "" ]; do
@@ -161,12 +189,17 @@ while [ "$1" != "" ]; do
 		;;
 	-a | --add)
 		welcome_screen
+		validate_station_lists
 		add_stations
 		exit 0
 		;;
 	-r | --remove)
 		welcome_screen
 		remove_station
+		exit 0
+		;;
+	--reset)
+		reset_favorites
 		exit 0
 		;;
 	-f | --fresh)
@@ -200,6 +233,9 @@ for binary in grep curl info sleep clear killall; do
 		exit 1
 	fi
 done
+
+# Έλεγχος εγκυρότητας λίστας σταθμών
+validate_station_lists
 
 while true; do
 	terms=0
