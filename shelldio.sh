@@ -182,16 +182,15 @@ while [ "$1" != "" ]; do
 done
 
 ### Base script
+# Έλεγχος αν υπάρχει ο mpv
+if ! command -v mpv &>/dev/null; then
+	echo -e "Το Shelldio χρειάζεται το MPV player αλλά δεν βρέθηκε στο σύστημά σας.\nΠαρακαλούμε εγκαταστήστε το MPV πριν τρέξετε το Shelldio "
+	exit 1
+fi
 
 while true; do
 	terms=0
 	trap ' [ $terms = 1 ] || { terms=1; kill -TERM -$$; };  exit' EXIT INT HUP TERM QUIT
-
-	# Έλεγχος αν υπάρχει ο mpv
-	if ! command -v mpv &>/dev/null; then
-		echo "Δεν βρέθηκε συμβατός player. Συμβατός player είναι ο mpv"
-		exit 1
-	fi
 
 	if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
 		if [ -d "$HOME/.shelldio/" ]; then
