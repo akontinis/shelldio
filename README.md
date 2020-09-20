@@ -63,6 +63,8 @@ sudo ln -s ~/shelldio/shelldio.sh /usr/bin/shelldio
 brew install mpv
 ```
 
+έπειτα τρέχετε μια μια τις παρακάτω εντολές:
+
 ```bash
 git clone https://github.com/CerebruxCode/shelldio ~/shelldio
 sudo ln -s ~/shelldio/shelldio.sh /usr/local/bin/shelldio
