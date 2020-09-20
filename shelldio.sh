@@ -118,7 +118,7 @@ remove_station() {
 			elif [ "$remove_station" -gt 0 ] && [ "$remove_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
 				station=$(sed "${remove_station}q;d" "$my_stations")
 				stathmos_name=$(echo "$station" | cut -d "," -f1)
-				sed -i "$remove_station""d" "$HOME/.shelldio/my_stations.txt"
+				grep -v "$stathmos_name" "$HOME/.shelldio/my_stations.txt" > "$HOME/.shelldio/my_stations.tmp" && mv "$HOME/.shelldio/my_stations.tmp" "$HOME/.shelldio/my_stations.txt"
 				echo "Διαγράφηκε ο σταθμός $stathmos_name."
 			else
 				echo "Αριθμός εκτός λίστας"
