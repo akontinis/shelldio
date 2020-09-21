@@ -23,10 +23,12 @@ validate_csv() {
 }
 
 validate_station_lists() {
-	if [[ $(validate_csv "$all_stations") -eq 0 ]]; then
-		echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
-		echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
-		exit 1
+	if [ -f "$all_stations" ]; then
+		if [[ $(validate_csv "$all_stations") -eq 0 ]]; then
+			echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
+			echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
+			exit 1
+		fi
 	fi
 
 	if [ -f "$my_stations" ]; then
@@ -253,6 +255,9 @@ for binary in grep curl info sleep clear killall; do
 	fi
 done
 
+# Έλεγχος εγκυρότητας λίστας σταθμών
+validate_station_lists
+
 while true; do
 	terms=0
 	trap ' [ $terms = 1 ] || { terms=1; kill -TERM -$$; };  exit' EXIT INT HUP TERM QUIT
@@ -285,9 +290,6 @@ while true; do
 	else
 		stations="$1"
 	fi
-
-	# Έλεγχος εγκυρότητας λίστας σταθμών
-	validate_station_lists
 
 	while true; do
 
