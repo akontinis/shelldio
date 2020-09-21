@@ -143,7 +143,7 @@ remove_station() {
 			elif [ "$remove_station" -gt 0 ] && [ "$remove_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
 				station=$(sed "${remove_station}q;d" "$my_stations")
 				stathmos_name=$(echo "$station" | cut -d "," -f1)
-				grep -v "$stathmos_name" "$HOME/.shelldio/my_stations.txt" > "$HOME/.shelldio/my_stations.tmp" && mv "$HOME/.shelldio/my_stations.tmp" "$HOME/.shelldio/my_stations.txt"
+				grep -v "$stathmos_name" "$HOME/.shelldio/my_stations.txt" >"$HOME/.shelldio/my_stations.tmp" && mv "$HOME/.shelldio/my_stations.tmp" "$HOME/.shelldio/my_stations.txt"
 				echo "Διαγράφηκε ο σταθμός $stathmos_name."
 			else
 				echo "Αριθμός εκτός λίστας"
@@ -152,27 +152,46 @@ remove_station() {
 	fi
 }
 
+mpv_msg() {
+	if grep debian /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo apt install mpv' για να εγκαταστήσετε τον player"
+	elif grep fedora /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo dnf -y install mpv' για να εγκαταστήσετε τον player"
+	elif grep suse /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo zypper in mpv' για να εγκαταστήσετε τον player"
+	elif grep centos /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo yum -y install mpv' για να εγκαταστήσετε τον player"
+	elif uname -a | grep Darwin &>/dev/null; then
+		echo "Τρέξτε 'sudo brew install mpv' για να εγκαταστήσετε τον player"
+	else
+		echo "https://github.com/mpv-player/mpv/releases/latest"
+	fi
+}
+
 reset_favorites() {
 	if [ ! -f "$my_stations" ]; then
 		echo "Μη έγκυρη επιλογή. Το αρχείο αγαπημένων δεν υπάρχει."
 		exit 1
-    fi
+	fi
 
 	while true; do
 		read -rp "Θες σίγουρα να διαγράψεις το αρχείο αγαπημένων;" yn
 		case $yn in
-			[Yy]*) rm -f "$my_stations"; break;;
-			[Nn]*) exit;;
-			*) echo "Παρακαλώ απαντήστε με ναί ή όχι (yes/no)";;
+		[Yy]*)
+			rm -f "$my_stations"
+			break
+			;;
+		[Nn]*) exit ;;
+		*) echo "Παρακαλώ απαντήστε με ναί ή όχι (yes/no)" ;;
 		esac
 	done
 
-    if [ -f "$my_stations" ]; then
+	if [ -f "$my_stations" ]; then
 		echo "Απέτυχε η διαγραφή του αρχείου αγαπημένων"
 		exit 1
-    fi
+	fi
 
-    echo "Το αρχείο αγαπημένων διαγράφτηκε επιτυχώς"
+	echo "Το αρχείο αγαπημένων διαγράφτηκε επιτυχώς"
 	exit 0
 }
 
@@ -247,6 +266,7 @@ if [[ $player = 1 ]]; then
 	echo "Έλεγχος προαπαιτούμενων για το Shelldio"
 	sleep 1
 	echo -e "Το Shelldio χρειάζεται το MPV player αλλά δεν βρέθηκε στο σύστημά σας.\nΠαρακαλούμε εγκαταστήστε το MPV πριν τρέξετε το Shelldio"
+	mpv_msg
 	exit 1
 fi
 for binary in grep curl info sleep clear killall; do
