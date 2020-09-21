@@ -9,4 +9,4 @@ jobs:
     - name: Run csv-lint
       uses: blackstar257/docker-csvlint@master
       env:
-        ACTION_STATE_NAME: ".shelldio/all_stations.txt."
+        ACTION_STATE_NAME: ".shelldio/all_stations.txt"
