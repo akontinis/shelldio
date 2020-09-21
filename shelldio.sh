@@ -151,8 +151,27 @@ remove_station() {
 }
 
 reset_favorites() {
-	echo "Πραγματοποιείται διαγραφή του αρχείου αγαπημένων.."
-	rm -f "$my_stations"
+	if [ ! -f "$my_stations" ]; then
+		echo "Μη έγκυρη επιλογή. Το αρχείο αγαπημένων δεν υπάρχει."
+		exit 1
+    fi
+
+	while true; do
+		read -p "Θες σίγουρα να διαγράψεις το αρχείο αγαπημένων;" yn
+		case $yn in
+			[Yy]*) rm -f "$my_stations"; break;;
+			[Nn]*) exit;;
+			*) echo "Παρακαλώ απαντήστε με ναί ή όχι (yes/no)";;
+		esac
+	done
+
+    if [ -f "$my_stations" ]; then
+		echo "Απέτυχε η διαγραφή του αρχείου αγαπημένων"
+		exit 1
+    fi
+
+    echo "Το αρχείο αγαπημένων διαγράφτηκε επιτυχώς"
+	exit 0
 }
 
 ### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio --[option]
