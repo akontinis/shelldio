@@ -2,7 +2,9 @@
 #
 #
 # Shelldio - ακούστε online ραδιόφωνο από το τερματικό
-# Copyright (c)2018 Vasilis Niakas and Contributors
+# Shelldio was based on bash_radio.sh (c)2018-2020 Vasilis Niakas and Contributors.
+#
+# (c)2020 Shelldio | Salih Emin, JohnGavr and Contributors.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -10,13 +12,35 @@
 #
 # Please read the file LICENSE and README for more information.
 #
-#
 
 ### Variable List
 all_stations="$HOME/.shelldio/all_stations.txt"
 my_stations="$HOME/.shelldio/my_stations.txt"
 
 ### Functions List
+
+validate_csv() {
+	awk 'BEGIN{FS=","}!n{n=NF}n!=NF{failed=1;exit}END{print !failed}' "$1"
+}
+
+validate_station_lists() {
+	if [ -f "$all_stations" ]; then
+		if [[ $(validate_csv "$all_stations") -eq 0 ]]; then
+			echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
+			echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
+			exit 1
+		fi
+	fi
+
+	if [ -f "$my_stations" ]; then
+		if [[ $(validate_csv "$my_stations") -eq 0 ]]; then
+			echo "Πρόβλημα: Η λίστα σταθμών: $my_stations δεν είναι έγκυρη"
+			echo "Εκτέλεσε shelldio --reset για να διαγράψεις τη λίστα αγαπημένων"
+			echo "Στη συνέχεια πρόσθεσε ξανά τους αγαπημένους σου σταθμούς"
+			exit 1
+		fi
+	fi
+}
 
 # Μήνυμα καλωσορίσματος
 
@@ -32,7 +56,7 @@ welcome_screen() {
 	echo '| [___________________________________I__] |'
 	echo '|   #######################       (_) (_)  | '
 	echo "|_______________ Shelldio _________________|"
-	echo "|                 v2.0.0                   |"
+	echo "|                 v2.1.0                   |"
 	echo "|                                          |"
 	echo "|       Ακούστε τους αγαπημένους σας       |"
 	echo "|        σταθμούς από το τερματικό         |"
@@ -52,16 +76,17 @@ option_detail() {
 
 Αν θέλουμε να ξεκινήσουμε το shelldio με όρισμα τότε αυτό μπορεί να είναι ένα απο τα παρακάτω:
 
-	-a, --add : Δημιουργεί το αρχείο ~/.shelldio/my_stations.txt
-				στο οποίο μεταφέρει τους αγαπημένους σας σταθμούς
-	-f, --fresh : Κατεβάζει εκ νέου την λίστα των σταθμών 
-				  με επικαιροποιημένους ραδιοφωνικούς σταθμούς
+	-a, --add : Δημιουργεί το αρχείο $my_stations
+		  στο οποίο μεταφέρει τους αγαπημένους σας σταθμούς
+	-f, --fresh : Κατεβάζει εκ νέου την λίστα των σταθμών με επικαιροποιημένους ραδιοφωνικούς σταθμούς
 	
 	-h, --help: Εμφανίζει πληροφορίες για την χρήση της εφαρμογής
 	
-	-l, --list: Εμφανίζει την λίστα με τους ραδιοφωνικούς σταθμούς.
+	-l, --list: Εμφανίζει την λίστα με τους ραδιοφωνικούς σταθμούς
 	
-	-r, --remove: Διαγράφει σταθμούς της επιλογής σας από το my_stations.txt
+	-r, --remove: Διαγράφει σταθμούς της επιλογής σας από το $my_stations
+
+	--reset: Καθαρίζει τη λίστα αγαπημένων, διαγράφοντας το αρχείο $my_stations
 EOF
 }
 
@@ -89,11 +114,9 @@ add_stations() {
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$input_station" -gt 0 ] && [ "$input_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			station=$(sed "${input_station}q;d" "$stations")
+			station=$(sed "${input_station}q;d" "$all_stations")
 			stathmos_name=$(echo "$station" | cut -d "," -f1)
 			stathmos_url=$(echo "$station" | cut -d "," -f2)
-			#stathmos_name=$(< "$all_stations" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f1)
-			#stathmos_url=$(< "$all_stations" head -n$(( "$input_station" )) | tail -n1 | cut -d "," -f2)
 			echo "$stathmos_name,$stathmos_url" >>"$my_stations"
 			echo " Προστέθηκε ο σταθμός $stathmos_name."
 		else
@@ -118,15 +141,62 @@ remove_station() {
 				echo "Έξοδος..."
 				exit 0
 			elif [ "$remove_station" -gt 0 ] && [ "$remove_station" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-				stathmos_name=$(head <"$HOME/.shelldio/my_stations.txt" -n$(("$remove_station")) | tail -n1 | cut -d "," -f1)
-				stathmos_url=$(head <"$HOME/.shelldio/my_stations.txt" -n$(("$remove_station")) | tail -n1 | cut -d "," -f2)
-				sed -i "$remove_station""d" "$HOME/.shelldio/my_stations.txt"
+				station=$(sed "${remove_station}q;d" "$my_stations")
+				stathmos_name=$(echo "$station" | cut -d "," -f1)
+				grep -v "$stathmos_name" "$HOME/.shelldio/my_stations.txt" >"$HOME/.shelldio/my_stations.tmp" && mv "$HOME/.shelldio/my_stations.tmp" "$HOME/.shelldio/my_stations.txt"
 				echo "Διαγράφηκε ο σταθμός $stathmos_name."
 			else
 				echo "Αριθμός εκτός λίστας"
 			fi
 		done
 	fi
+}
+
+mpv_msg() {
+	if grep debian /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo apt install mpv' για να εγκαταστήσετε τον player"
+	elif grep fedora /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo dnf -y install mpv' για να εγκαταστήσετε τον player"
+	elif grep suse /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo zypper in mpv' για να εγκαταστήσετε τον player"
+	elif grep centos /etc/os-release &>/dev/null; then
+		echo "Τρέξτε 'sudo yum -y install mpv' για να εγκαταστήσετε τον player"
+	elif uname -a | grep Darwin &>/dev/null; then
+		echo "Τρέξτε 'sudo brew install mpv' για να εγκαταστήσετε τον player"
+	elif uname -a | grep BSD &>/dev/null; then
+		echo "Τρέξτε 'sudo pkg install mpv' για να εγκαταστήσετε τον player"
+	else
+		echo "Δεν μπορέσαμε να εντοπίσουμε το λειτουργικό σας σύστημα."
+		echo "Παρακαλούμε επισκεφτείτε τον παρακάτω σύνδεσμο για οδηγίες εγκατάστασης του MPV"
+		echo "https://mpv.io/installation/"
+	fi
+}
+
+reset_favorites() {
+	if [ ! -f "$my_stations" ]; then
+		echo "Μη έγκυρη επιλογή. Το αρχείο αγαπημένων δεν υπάρχει."
+		exit 1
+	fi
+
+	while true; do
+		read -rp "Θες σίγουρα να διαγράψεις το αρχείο αγαπημένων; (y/n)" yn
+		case $yn in
+		[Yy]*)
+			rm -f "$my_stations"
+			break
+			;;
+		[Nn]*) exit ;;
+		*) echo "Παρακαλώ απαντήστε με y (ναι) ή n (όχι)" ;;
+		esac
+	done
+
+	if [ -f "$my_stations" ]; then
+		echo "Απέτυχε η διαγραφή του αρχείου αγαπημένων"
+		exit 1
+	fi
+
+	echo "Το αρχείο αγαπημένων διαγράφτηκε επιτυχώς"
+	exit 0
 }
 
 ### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio --[option]
@@ -163,7 +233,9 @@ while [ "$1" != "" ]; do
 		;;
 	-a | --add)
 		welcome_screen
+		validate_station_lists
 		add_stations
+		validate_station_lists
 		exit 0
 		;;
 	-r | --remove)
@@ -171,11 +243,20 @@ while [ "$1" != "" ]; do
 		remove_station
 		exit 0
 		;;
+	--reset)
+		reset_favorites
+		exit 0
+		;;
 	-f | --fresh)
 		welcome_screen
 		echo "Γίνεται λήψη του αρχείου των σταθμών από το αποθετήριο."
 		sleep 1
 		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+		exit 0
+		;;
+	*)
+		echo "Λάθος επιλογή."
+		echo "Εκτέλεσε shelldio --help για να δεις τις δυνατές επιλογές!"
 		exit 0
 		;;
 	esac
@@ -189,14 +270,18 @@ if [[ $player = 1 ]]; then
 	echo "Έλεγχος προαπαιτούμενων για το Shelldio"
 	sleep 1
 	echo -e "Το Shelldio χρειάζεται το MPV player αλλά δεν βρέθηκε στο σύστημά σας.\nΠαρακαλούμε εγκαταστήστε το MPV πριν τρέξετε το Shelldio"
+	mpv_msg
 	exit 1
 fi
-for binary in curl info sleep clear killall; do
+for binary in grep curl info sleep clear killall; do
 	if ! command -v $binary &>/dev/null; then
 		echo -e "Το Shelldio χρειάζεται το '$binary'\nΠαρακαλούμε εγκαταστήστε το πριν τρέξετε το Shelldio"
 		exit 1
 	fi
 done
+
+# Έλεγχος εγκυρότητας λίστας σταθμών
+validate_station_lists
 
 while true; do
 	terms=0
@@ -256,8 +341,9 @@ while true; do
 			echo "Έξοδος..."
 			exit 0
 		elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
-			stathmos_name=$(head <"$stations" -n$(("$input_play")) | tail -n1 | cut -d "," -f1)
-			stathmos_url=$(head <"$stations" -n$(("$input_play")) | tail -n1 | cut -d "," -f2)
+			station=$(sed "${input_play}q;d" "$stations")
+			stathmos_name=$(echo "$station" | cut -d "," -f1)
+			stathmos_url=$(echo "$station" | cut -d "," -f2)
 			break
 		else
 			echo "Αριθμός εκτός λίστας"
