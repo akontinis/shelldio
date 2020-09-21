@@ -234,9 +234,6 @@ for binary in grep curl info sleep clear killall; do
 	fi
 done
 
-# Έλεγχος εγκυρότητας λίστας σταθμών
-validate_station_lists
-
 while true; do
 	terms=0
 	trap ' [ $terms = 1 ] || { terms=1; kill -TERM -$$; };  exit' EXIT INT HUP TERM QUIT
@@ -269,6 +266,9 @@ while true; do
 	else
 		stations="$1"
 	fi
+
+	# Έλεγχος εγκυρότητας λίστας σταθμών
+	validate_station_lists
 
 	while true; do
 
