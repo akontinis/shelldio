@@ -212,6 +212,7 @@ while [ "$1" != "" ]; do
 		welcome_screen
 		validate_station_lists
 		add_stations
+		validate_station_lists
 		exit 0
 		;;
 	-r | --remove)
