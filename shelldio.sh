@@ -2,7 +2,9 @@
 #
 #
 # Shelldio - ακούστε online ραδιόφωνο από το τερματικό
-# Copyright (c)2018 Vasilis Niakas and Contributors
+# Shelldio was based on bash_radio.sh (c)2018-2020 Vasilis Niakas and Contributors.
+#
+# (c)2020 Shelldio | Salih Emin, JohnGavr and Contributors.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -10,7 +12,7 @@
 #
 # Please read the file LICENSE and README for more information.
 #
-#
+
 
 ### Variable List
 all_stations="$HOME/.shelldio/all_stations.txt"
