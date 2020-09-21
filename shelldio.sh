@@ -163,8 +163,12 @@ mpv_msg() {
 		echo "Τρέξτε 'sudo yum -y install mpv' για να εγκαταστήσετε τον player"
 	elif uname -a | grep Darwin &>/dev/null; then
 		echo "Τρέξτε 'sudo brew install mpv' για να εγκαταστήσετε τον player"
+	elif uname -a | grep BSD &>/dev/null; then
+		echo "Τρέξτε 'sudo pkg install mpv' για να εγκαταστήσετε τον player"
 	else
-		echo "https://github.com/mpv-player/mpv/releases/latest"
+		echo "Δεν μπορέσαμε να εντοπίσουμε το λειτουργικό σας σύστημα."
+		echo "Παρακαλούμε επισκεφτείτε τον παρακάτω σύνδεσμο για οδηγίες εγκατάστασης του MPV"
+		echo "https://mpv.io/installation/"
 	fi
 }
 
