@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "cerebrux",
+      "name": "Salih Emin",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/914656?v=4",
+      "profile": "https://wiki.ubuntu.com/SalihEmin",
+      "contributions": [
+        "projectManagement",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "shelldio",
+  "projectOwner": "CerebruxCode",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
