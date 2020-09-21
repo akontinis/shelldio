@@ -175,14 +175,14 @@ reset_favorites() {
 	fi
 
 	while true; do
-		read -rp "Θες σίγουρα να διαγράψεις το αρχείο αγαπημένων;" yn
+		read -rp "Θες σίγουρα να διαγράψεις το αρχείο αγαπημένων; (y/n)" yn
 		case $yn in
 		[Yy]*)
 			rm -f "$my_stations"
 			break
 			;;
 		[Nn]*) exit ;;
-		*) echo "Παρακαλώ απαντήστε με ναί ή όχι (yes/no)" ;;
+		*) echo "Παρακαλώ απαντήστε με y (ναι) ή n (όχι)" ;;
 		esac
 	done
 
