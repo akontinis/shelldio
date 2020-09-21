@@ -18,6 +18,29 @@ my_stations="$HOME/.shelldio/my_stations.txt"
 
 ### Functions List
 
+validate_csv() {
+	awk 'BEGIN{FS=","}!n{n=NF}n!=NF{failed=1;exit}END{print !failed}' "$1"
+}
+
+validate_station_lists() {
+	if [ -f "$all_stations" ]; then
+		if [[ $(validate_csv "$all_stations") -eq 0 ]]; then
+			echo "Πρόβλημα: Η λίστα σταθμών: $all_stations δεν είναι έγκυρη"
+			echo "Εκτέλεσε shelldio --fresh για να κατεβάσεις τη λίστα εκ νέου"
+			exit 1
+		fi
+	fi
+
+	if [ -f "$my_stations" ]; then
+		if [[ $(validate_csv "$my_stations") -eq 0 ]]; then
+			echo "Πρόβλημα: Η λίστα σταθμών: $my_stations δεν είναι έγκυρη"
+			echo "Εκτέλεσε shelldio --reset για να διαγράψεις τη λίστα αγαπημένων"
+			echo "Στη συνέχεια πρόσθεσε ξανά τους αγαπημένους σου σταθμούς"
+			exit 1
+		fi
+	fi
+}
+
 # Μήνυμα καλωσορίσματος
 
 welcome_screen() {
@@ -52,16 +75,18 @@ option_detail() {
 
 Αν θέλουμε να ξεκινήσουμε το shelldio με όρισμα τότε αυτό μπορεί να είναι ένα απο τα παρακάτω:
 
-	-a, --add : Δημιουργεί το αρχείο ~/.shelldio/my_stations.txt
+	-a, --add : Δημιουργεί το αρχείο $my_stations
 				στο οποίο μεταφέρει τους αγαπημένους σας σταθμούς
 	-f, --fresh : Κατεβάζει εκ νέου την λίστα των σταθμών 
 				  με επικαιροποιημένους ραδιοφωνικούς σταθμούς
 	
 	-h, --help: Εμφανίζει πληροφορίες για την χρήση της εφαρμογής
 	
-	-l, --list: Εμφανίζει την λίστα με τους ραδιοφωνικούς σταθμούς.
+	-l, --list: Εμφανίζει την λίστα με τους ραδιοφωνικούς σταθμούς
 	
-	-r, --remove: Διαγράφει σταθμούς της επιλογής σας από το my_stations.txt
+	-r, --remove: Διαγράφει σταθμούς της επιλογής σας από το $my_stations
+
+	--reset: Καθαρίζει τη λίστα αγαπημένων, διαγράφοντας το αρχείο $my_stations
 EOF
 }
 
@@ -127,6 +152,30 @@ remove_station() {
 	fi
 }
 
+reset_favorites() {
+	if [ ! -f "$my_stations" ]; then
+		echo "Μη έγκυρη επιλογή. Το αρχείο αγαπημένων δεν υπάρχει."
+		exit 1
+    fi
+
+	while true; do
+		read -rp "Θες σίγουρα να διαγράψεις το αρχείο αγαπημένων;" yn
+		case $yn in
+			[Yy]*) rm -f "$my_stations"; break;;
+			[Nn]*) exit;;
+			*) echo "Παρακαλώ απαντήστε με ναί ή όχι (yes/no)";;
+		esac
+	done
+
+    if [ -f "$my_stations" ]; then
+		echo "Απέτυχε η διαγραφή του αρχείου αγαπημένων"
+		exit 1
+    fi
+
+    echo "Το αρχείο αγαπημένων διαγράφτηκε επιτυχώς"
+	exit 0
+}
+
 ### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio --[option]
 
 while [ "$1" != "" ]; do
@@ -161,12 +210,18 @@ while [ "$1" != "" ]; do
 		;;
 	-a | --add)
 		welcome_screen
+		validate_station_lists
 		add_stations
+		validate_station_lists
 		exit 0
 		;;
 	-r | --remove)
 		welcome_screen
 		remove_station
+		exit 0
+		;;
+	--reset)
+		reset_favorites
 		exit 0
 		;;
 	-f | --fresh)
@@ -200,6 +255,9 @@ for binary in grep curl info sleep clear killall; do
 		exit 1
 	fi
 done
+
+# Έλεγχος εγκυρότητας λίστας σταθμών
+validate_station_lists
 
 while true; do
 	terms=0
