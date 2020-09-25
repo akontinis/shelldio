@@ -249,6 +249,9 @@ while [ "$1" != "" ]; do
 		;;
 	-f | --fresh)
 		welcome_screen
+		if [ ! -f "$HOME/.shelldio" ]; then
+			mkdir "$HOME/.shelldio"
+		fi
 		echo "Γίνεται λήψη του αρχείου των σταθμών από το αποθετήριο."
 		sleep 1
 		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
