@@ -74,6 +74,7 @@ Star Athens 107.8,http://95.154.254.129:17498/stream
 Status FM 107.7,http://148.251.179.119:8000/stream
 Studio 3 103.5,http://s1.onweb.gr:8408
 Styl FM 104.9,http://s3.onweb.gr:8530/;
+ThessRadio,http://noc.ezhellas.com:30570/zbutsam
 V FM 91.1,http://176.9.184.196:8177/stream
 Velvet 96.8,http://netradio.live24.gr/velvet968thess
 We Radio 89.4,https://radioservers.xyz/we-894-live
