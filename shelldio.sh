@@ -315,8 +315,6 @@ while true; do
 			curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 			stations="$all_stations"
 		fi
-	else
-		stations="$1"
 	fi
 
 	while true; do
