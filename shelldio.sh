@@ -76,9 +76,11 @@ option_detail() {
 
 Αν θέλουμε να ξεκινήσουμε το shelldio με όρισμα τότε αυτό μπορεί να είναι ένα απο τα παρακάτω:
 
-	-a, --add : Δημιουργεί το αρχείο $my_stations
+	<1-9>: Γρήγορη εκκίνηση. Ξεκινάει την αναπαραγωγή του σταθμού στη θέση που δόθηκε ως όρισμα
+
+	-a, --add: Δημιουργεί το αρχείο $my_stations
 		  στο οποίο μεταφέρει τους αγαπημένους σας σταθμούς
-	-f, --fresh : Κατεβάζει εκ νέου την λίστα των σταθμών με επικαιροποιημένους ραδιοφωνικούς σταθμούς
+	-f, --fresh: Κατεβάζει εκ νέου την λίστα των σταθμών με επικαιροποιημένους ραδιοφωνικούς σταθμούς
 	
 	-h, --help: Εμφανίζει πληροφορίες για την χρήση της εφαρμογής
 	
@@ -199,10 +201,14 @@ reset_favorites() {
 	exit 0
 }
 
-### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio --[option]
+### Λίστα με τις επιλογές σαν 1ο όρισμα shelldio
 
 while [ "$1" != "" ]; do
 	case $1 in
+	[1-9])
+		clear
+		break # Συνέχεια στο script για αναπαραγωγή
+		;;
 	-h | --help)
 		option_detail
 		exit 0
@@ -290,53 +296,54 @@ while true; do
 	terms=0
 	trap ' [ $terms = 1 ] || { terms=1; kill -TERM -$$; };  exit' EXIT INT HUP TERM QUIT
 
-	if [ "$#" -eq "0" ]; then #στην περίπτωση που δε δοθεί όρισμα παίρνει το προκαθορισμένο αρχείο
-		if [ -d "$HOME/.shelldio/" ]; then
-			if [ -f "$my_stations" ]; then
-				if [ -s "$my_stations" ]; then
-					stations="$my_stations"
-				else
-					stations="$all_stations"
-				fi
+	if [ -d "$HOME/.shelldio/" ]; then
+		if [ -f "$my_stations" ]; then
+			if [ -s "$my_stations" ]; then
+				stations="$my_stations"
 			else
-				if [ ! -f "$all_stations" ]; then
-					echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
-					sleep 2
-					curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
-				fi
 				stations="$all_stations"
 			fi
 		else
-			echo "Δημιουργείται ο κρυφός φάκελος .shelldio ο οποίος θα περιέχει τα αρχεία των σταθμών."
-			sleep 2
-			mkdir -p "$HOME/.shelldio"
-			echo "Γίνεται η λήψη του αρχείου με όλους τους σταθμούς."
-			sleep 2
-			curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+			if [ ! -f "$all_stations" ]; then
+				echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
+				sleep 2
+				curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+			fi
 			stations="$all_stations"
 		fi
+	else
+		echo "Δημιουργείται ο κρυφός φάκελος .shelldio ο οποίος θα περιέχει τα αρχεία των σταθμών."
+		sleep 2
+		mkdir -p "$HOME/.shelldio"
+		echo "Γίνεται η λήψη του αρχείου με όλους τους σταθμούς."
+		sleep 2
+		curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
+		stations="$all_stations"
 	fi
 
 	while true; do
-
 		welcome_screen
 
 		num=0
-
 		list_stations "$stations"
 
-		if [ ! -f "$my_stations" ]; then
-			echo "Από προεπιλογή η λίστα σταθμών περιέχει όλους τους σταθμούς."
-			echo "Μπορείς να δημιουργήσεις ένα αρχείο με τους αγαπημένους σου σταθμούς."
-			echo "shelldio --help για να δεις πως μπορείς να το κάνεις!"
-		elif [ ! -s "$my_stations" ]; then
-			echo "Το αρχείο my_stations.txt υπάρχει αλλά είναι κενό."
-			echo "Θα φορτώσει η λίστα με όλους τους σταθμούς."
-			echo "Αν θέλεις να προσθέσεις αγαπημένους σταθμούς δοκίμασε την επιλογή add"
-			echo "shelldio --add"
+		if [ "$#" -eq "0" ]; then # στην περίπτωση που δε δοθεί όρισμα εμφάνισε τη λίστα σταθμών
+			if [ ! -f "$my_stations" ]; then
+				echo "Από προεπιλογή η λίστα σταθμών περιέχει όλους τους σταθμούς."
+				echo "Μπορείς να δημιουργήσεις ένα αρχείο με τους αγαπημένους σου σταθμούς."
+				echo "shelldio --help για να δεις πως μπορείς να το κάνεις!"
+			elif [ ! -s "$my_stations" ]; then
+				echo "Το αρχείο my_stations.txt υπάρχει αλλά είναι κενό."
+				echo "Θα φορτώσει η λίστα με όλους τους σταθμούς."
+				echo "Αν θέλεις να προσθέσεις αγαπημένους σταθμούς δοκίμασε την επιλογή add"
+				echo "shelldio --add"
+			fi
+			echo "---------------------------------------------------------"
+			read -rp "Διαλέξτε Σταθμό (ή Q/q για έξοδο): " input_play
+		else
+			input_play="$1"
+			shift # αφαιρούμε το cli argument ώστε να μπορεί ζητήσει από STDIN αν δωθεί 'r' στη συνέχεια (reload)
 		fi
-		echo "---------------------------------------------------------"
-		read -rp "Διαλέξτε Σταθμό (ή Q/q για έξοδο): " input_play
 
 		if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]]; then
 			echo "Έξοδος..."
@@ -376,7 +383,7 @@ while true; do
 			done
 			clear
 			echo "Επιστροφή στη λίστα σταθμών"
-			sleep 2
+			sleep 1
 			clear
 			break
 		fi
