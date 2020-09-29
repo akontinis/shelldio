@@ -249,7 +249,7 @@ while [ "$1" != "" ]; do
 		;;
 	-f | --fresh)
 		welcome_screen
-		if [ ! -f "$HOME/.shelldio" ]; then
+		if [ ! -d "$HOME/.shelldio" ]; then
 			mkdir "$HOME/.shelldio"
 		fi
 		echo "Γίνεται λήψη του αρχείου των σταθμών από το αποθετήριο."
