@@ -1,5 +1,5 @@
 
-                 Shelldio - Ακούστε Ραδιοφωνικούς σταθμούς στο τερματικό σας
+                 Shelldio - Ακούστε Ραδιοφωνικούς σταθμούς στο τερματικό σας.
 
                (c)2018-2020 bash_radio.sh | Vasilis Niakas and Contributors.
                (c)2020 Shelldio | Salih Emin, JohnGavr and Contributors.
@@ -11,15 +11,16 @@
 
 
 Σημείωση:
-Εάν έχετε σχόλια, διορθώσεις ή κάτι άλλο, παρακαλώ διαβάστε τις οδηγίες του  αρχείου CONTRIBUTING
+~~~~~~~~~~~~~~
+Εάν έχετε σχόλια, διορθώσεις ή κάτι άλλο, παρακαλώ διαβάστε τις οδηγίες του  αρχείου CONTRIBUTING.
 Μην επικοινωνείτε άμεσα με τα άτομα που αναφέρονται εδώ.
 
-Authors
-~~~~~~~~~~~~
+Authors:
+~~~~~~~~~~~~~~
 JohnGavr : https://github.com/JohnGavr
 Salih Emin : https://github.com/cerebrux
 
-Contributors
-~~~~~~~~~~~~
+Contributors:
+~~~~~~~~~~~~~~
 Panagiotis Georgiadis [General & macOS] : https://github.com/drpaneas
 Zois Pagoulatos [macOS] : https://github.com/zoispag
