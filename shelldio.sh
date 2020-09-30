@@ -14,7 +14,7 @@
 #
 
 ### Variable List
-version="v2.2.0  " # this space after the version num is intentional to fix UI
+version="v2.3.0  " # this space after the version num is intentional to fix UI
 
 all_stations="$HOME/.shelldio/all_stations.txt"
 my_stations="$HOME/.shelldio/my_stations.txt"
@@ -48,22 +48,23 @@ validate_station_lists() {
 
 welcome_screen() {
 	echo '                                       .-_   _-.'
-	echo '                                      / /     \ \ '
+	echo '                                      / / _ _ \ \ '
 	echo '                                     ( ( (-o-) ) )'
 	echo '                                      \.\_-!-_/./'
-	echo '                                         --|--'
+	echo '                                         --+--'
 	echo "                                           |"
 	echo '                                           |'
-	echo ' .-;______________________________________;|'
-	echo '| [___________________________________I__] |'
-	echo '|   #######################       (_) (_)  |'
+	echo '._;======================================;_|'
+	echo '| [______________________________________] |'
+	echo '|   |############################|         |'
+	echo '|   |############################| (_) (_) |'
 	echo "|_______________ Shelldio _________________|"
 	echo "|                 $version                 |"
 	echo "|                                          |"
 	echo "|       Ακούστε τους αγαπημένους σας       |"
 	echo "|        σταθμούς από το τερματικό         |"
 	echo "|                                          |"
-	echo "| https://github.com/CerebruxCode/Shelldio |"
+	echo "|      https://cerebrux.net/shelldio/      |"
 	echo "|__________________________________________|"
 }
 
@@ -103,7 +104,13 @@ list_stations() {
 # Πληροφορίες που εμφανίζονται μετά την επιλογή του σταθμού
 info() {
 	welcome_screen
-	echo -ne "| Η ώρα είναι $(date +"%T")\n| Ακούτε $stathmos_name\n| Πατήστε Q/q για έξοδο ή R/r για επιστροφή στη λίστα σταθμών"
+	echo -ne "            Η ώρα είναι $(date +"%T")\n"
+	echo -ne " \n"
+	echo -ne "             Ακούτε $stathmos_name\n"
+	echo -ne " \n"
+	echo -ne "   ____________               ___________\n"
+	echo -ne "  [Έξοδος (Q/q)].___________.[Πίσω  (R/r)]\n"
+	echo -ne " "
 }
 
 add_stations() {
