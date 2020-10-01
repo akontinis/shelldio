@@ -14,7 +14,7 @@
 #
 
 ### Variable List
-version="v2.2.0  " # this space after the version num is intentional to fix UI
+version="v2.3.0  " # this space after the version num is intentional to fix UI
 
 all_stations="$HOME/.shelldio/all_stations.txt"
 my_stations="$HOME/.shelldio/my_stations.txt"
@@ -48,22 +48,23 @@ validate_station_lists() {
 
 welcome_screen() {
 	echo '                                       .-_   _-.'
-	echo '                                      / /     \ \ '
+	echo '                                      / / _ _ \ \ '
 	echo '                                     ( ( (-o-) ) )'
 	echo '                                      \.\_-!-_/./'
-	echo '                                         --|--'
+	echo '                                         --+--'
 	echo "                                           |"
 	echo '                                           |'
-	echo ' .-;______________________________________;|'
-	echo '| [___________________________________I__] |'
-	echo '|   #######################       (_) (_)  |'
+	echo '._;======================================;_|'
+	echo '| [______________________________________] |'
+	echo '|   |############################|         |'
+	echo '|   |############################| (_) (_) |'
 	echo "|_______________ Shelldio _________________|"
 	echo "|                 $version                 |"
 	echo "|                                          |"
 	echo "|       Ακούστε τους αγαπημένους σας       |"
 	echo "|        σταθμούς από το τερματικό         |"
 	echo "|                                          |"
-	echo "| https://github.com/CerebruxCode/Shelldio |"
+	echo "|      https://cerebrux.net/shelldio       |"
 	echo "|__________________________________________|"
 }
 
@@ -103,12 +104,18 @@ list_stations() {
 # Πληροφορίες που εμφανίζονται μετά την επιλογή του σταθμού
 info() {
 	welcome_screen
-	echo -ne "| Η ώρα είναι $(date +"%T")\n| Ακούτε $stathmos_name\n| Πατήστε Q/q για έξοδο ή R/r για επιστροφή στη λίστα σταθμών"
+	echo -ne "            Η ώρα είναι $(date +"%T")\n"
+	echo -ne " \n"
+	echo -ne "  Ακούτε: [$selected_play] $stathmos_name\n"
+	echo -ne "\n"
+	echo -ne "   ____________               ___________\n"
+	echo -ne "  [Έξοδος (Q/q)].___________.[Πίσω  (R/r)]\n"
+	echo -ne " "
 }
 
 add_stations() {
 	echo "Εμφάνιση λίστας σταθμών"
-	sleep 2
+	sleep 1
 	list_stations "$all_stations"
 	while true; do
 		read -rp "Επέλεξε αριθμού σταθμού  (Q/q για έξοδο): " input_station
@@ -135,7 +142,7 @@ remove_station() {
 		echo "Για πληροφορίες τρέξε την παράμετρο --help."
 	else
 		echo "Εμφάνιση λίστας προσωπικών σταθμών"
-		sleep 2
+		sleep 1
 		list_stations "$my_stations"
 		while true; do
 			read -rp "Επέλεξε αριθμού σταθμού  (Q/q για έξοδο): " remove_station
@@ -303,17 +310,17 @@ while true; do
 			else
 				if [ ! -f "$all_stations" ]; then
 					echo "Δεν ήταν δυνατή η εύρεση του αρχείου σταθμών. Γίνεται η λήψη του..."
-					sleep 2
+					sleep 1
 					curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 				fi
 				stations="$all_stations"
 			fi
 		else
 			echo "Δημιουργείται ο κρυφός φάκελος .shelldio ο οποίος θα περιέχει τα αρχεία των σταθμών."
-			sleep 2
+			sleep 1
 			mkdir -p "$HOME/.shelldio"
 			echo "Γίνεται η λήψη του αρχείου με όλους τους σταθμούς."
-			sleep 2
+			sleep 1
 			curl -sL https://raw.githubusercontent.com/CerebruxCode/shelldio/stable/.shelldio/all_stations.txt --output "$HOME/.shelldio/all_stations.txt"
 			stations="$all_stations"
 		fi
@@ -345,12 +352,13 @@ while true; do
 			exit 0
 		elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
 			station=$(sed "${input_play}q;d" "$stations")
+			selected_play=$input_play # για να εμφανίζει το αριθμό που επέλεξε ο χρήστης στον Player UI 
 			stathmos_name=$(echo "$station" | cut -d "," -f1)
 			stathmos_url=$(echo "$station" | cut -d "," -f2)
 			break
 		else
 			echo "Αριθμός εκτός λίστας"
-			sleep 2
+			sleep 1
 			clear
 		fi
 	done
@@ -378,7 +386,7 @@ while true; do
 			done
 			clear
 			echo "Επιστροφή στη λίστα σταθμών"
-			sleep 2
+			sleep 1
 			clear
 			break
 		fi
