@@ -14,6 +14,8 @@
 #
 
 ### Variable List
+version="v2.2.0  " # this space after the version num is intentional to fix UI
+
 all_stations="$HOME/.shelldio/all_stations.txt"
 my_stations="$HOME/.shelldio/my_stations.txt"
 
@@ -54,9 +56,9 @@ welcome_screen() {
 	echo '                                           |'
 	echo ' .-;______________________________________;|'
 	echo '| [___________________________________I__] |'
-	echo '|   #######################       (_) (_)  | '
+	echo '|   #######################       (_) (_)  |'
 	echo "|_______________ Shelldio _________________|"
-	echo "|                 v2.1.0                   |"
+	echo "|                 $version                 |"
 	echo "|                                          |"
 	echo "|       Ακούστε τους αγαπημένους σας       |"
 	echo "|        σταθμούς από το τερματικό         |"
