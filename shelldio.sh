@@ -106,9 +106,9 @@ list_stations() {
 # Πληροφορίες που εμφανίζονται μετά την επιλογή του σταθμού
 info() {
 	welcome_screen
-	echo -ne "            Η ώρα είναι $(date +"%T")\n"
+	echo -ne "  Σταθμός: [$selected_play]    Η ώρα είναι $(date +"%T")\n"
 	echo -ne " \n"
-	echo -ne "  Ακούτε: [$selected_play] $stathmos_name\n"
+	echo -ne "  Ακούτε: $stathmos_name\n"
 	echo -ne "\n"
 	echo -ne "   ____________               ___________\n"
 	echo -ne "  [Έξοδος (Q/q)].___________.[Πίσω  (R/r)]\n"
@@ -347,7 +347,7 @@ while true; do
 				echo "Αν θέλεις να προσθέσεις αγαπημένους σταθμούς δοκίμασε την επιλογή add"
 				echo "shelldio --add"
 			fi
-			echo "---------------------------------------------------------"
+			echo "--------------------------------------------"
 			read -rp "Διαλέξτε Σταθμό (ή Q/q για έξοδο): " input_play
 		else
 			input_play="$1"
