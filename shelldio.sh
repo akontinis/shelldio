@@ -14,7 +14,7 @@
 #
 
 ### Variable List
-version="v2.3.0  " # this space after the version num is intentional to fix UI
+version="v2.4.0  " # this space after the version num is intentional to fix UI
 
 all_stations="$HOME/.shelldio/all_stations.txt"
 my_stations="$HOME/.shelldio/my_stations.txt"
@@ -359,7 +359,7 @@ while true; do
 			exit 0
 		elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
 			station=$(sed "${input_play}q;d" "$stations")
-			selected_play=$input_play # για να εμφανίζει το αριθμό που επέλεξε ο χρήστης στον Player UI 
+			selected_play=$input_play # για να εμφανίζει το αριθμό που επέλεξε ο χρήστης στον Player UI
 			stathmos_name=$(echo "$station" | cut -d "," -f1)
 			stathmos_url=$(echo "$station" | cut -d "," -f2)
 			break
