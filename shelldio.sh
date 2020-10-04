@@ -14,7 +14,7 @@
 #
 
 ### Variable List
-version="v2.3.0  " # this space after the version num is intentional to fix UI
+version="v2.4.0  " # this space after the version num is intentional to fix UI
 
 all_stations="$HOME/.shelldio/all_stations.txt"
 my_stations="$HOME/.shelldio/my_stations.txt"
@@ -106,9 +106,10 @@ list_stations() {
 # Πληροφορίες που εμφανίζονται μετά την επιλογή του σταθμού
 info() {
 	welcome_screen
-	echo -ne "            Η ώρα είναι $(date +"%T")\n"
+	tput civis -- invisible # Εξαφάνιση cursor
+	echo -ne "  Σταθμός: [$selected_play]    Η ώρα είναι $(date +"%T")\n"
 	echo -ne " \n"
-	echo -ne "  Ακούτε: [$selected_play] $stathmos_name\n"
+	echo -ne "  Ακούτε: $stathmos_name\n"
 	echo -ne "\n"
 	echo -ne "   ____________               ___________\n"
 	echo -ne "  [Έξοδος (Q/q)].___________.[Πίσω  (R/r)]\n"
@@ -347,7 +348,7 @@ while true; do
 				echo "Αν θέλεις να προσθέσεις αγαπημένους σταθμούς δοκίμασε την επιλογή add"
 				echo "shelldio --add"
 			fi
-			echo "---------------------------------------------------------"
+			echo "--------------------------------------------"
 			read -rp "Διαλέξτε Σταθμό (ή Q/q για έξοδο): " input_play
 		else
 			input_play="$1"
@@ -356,10 +357,11 @@ while true; do
 
 		if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]]; then
 			echo "Έξοδος..."
+			tput cnorm -- normal # Εμφάνιση cursor
 			exit 0
 		elif [ "$input_play" -gt 0 ] && [ "$input_play" -le $num ]; then #έλεγχος αν το input είναι μέσα στο εύρος της λίστας των σταθμών
 			station=$(sed "${input_play}q;d" "$stations")
-			selected_play=$input_play # για να εμφανίζει το αριθμό που επέλεξε ο χρήστης στον Player UI 
+			selected_play=$input_play # για να εμφανίζει το αριθμό που επέλεξε ο χρήστης στον Player UI
 			stathmos_name=$(echo "$station" | cut -d "," -f1)
 			stathmos_url=$(echo "$station" | cut -d "," -f2)
 			break
@@ -380,12 +382,14 @@ while true; do
 		if [[ $input_play = "q" ]] || [[ $input_play = "Q" ]]; then
 			clear
 			echo "Έξοδος..."
+			tput cnorm -- normal # Εμφάνιση cursor
 			exit 0
 		elif [[ $input_play = "r" ]] || [[ $input_play = "R" ]]; then
 			for pid in $(pgrep '^mpv$'); do
 				url="$(ps -o command= -p "$pid" | awk '{print $2}')"
 				if [[ "$url" == "$stathmos_url" ]]; then
 					echo "Έξοδος..."
+					tput cnorm -- normal # Εμφάνιση cursor
 					kill "$pid"
 				else
 					printf "Απέτυχε ο αυτόματος τερματισμός. \nΠάτα τον συνδυασμό Ctrl+C ή κλείσε το τερματικό \nή τερμάτισε το Shelldio απο τις διεργασίες του συστήματος"
@@ -393,6 +397,7 @@ while true; do
 			done
 			clear
 			echo "Επιστροφή στη λίστα σταθμών"
+			tput cnorm -- normal # Εμφάνιση cursor
 			sleep 1
 			clear
 			break
