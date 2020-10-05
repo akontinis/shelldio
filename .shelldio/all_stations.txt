@@ -11,6 +11,7 @@ Athens 106.5,http://148.251.162.206:9400/stream
 Athens DJ 95.2,http://netradio.live24.gr:80/athensdeejay
 Athens Voice 102.5,http://nitro.live24.gr:80/nitro4555
 Atlantis FM 105.2,http://85.10.206.222:8012
+Bar Legend Radio,https://solid24.streamupsolutions.com:2199/tunein/nilxzqeg.pls
 Best Radio 92.6,http://best.live24.gr:80/best1222
 Black Man 103.1,http://alpha-stream.eu:9326/;.mp3
 Ble.FM 93.1,http://radio.lancom.gr:8006/stream1
